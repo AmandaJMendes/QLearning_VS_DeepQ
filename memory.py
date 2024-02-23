@@ -2,7 +2,7 @@ import torch
 
 class ReplayMemory:
     def __init__(self, N = 1000):
-        self.memory = torch.empty(size = (0, 4))
+        self.memory = torch.empty(size = (0, 4), dtype = torch.int)
         self.N = N
 
     def add_experience(self, state, action, reward, next_state):
@@ -17,9 +17,12 @@ class ReplayMemory:
             print(f"WARNING! REPLAY MEMORY LENGTH ({self.memory.size()[0]}) IS LESS THEN BATCH SIZE ({batch_size}).")
             return self.memory
         else:
-            indices = torch.randint(low = 0, high = self.memory.size()[0], size = (batch_size,))
+            indices = torch.randperm(self.memory.size()[0])[:batch_size]
             batch = self.memory[indices, :]
             return batch
+        
+    def __len__(self):
+        return self.memory.size()[0]
 
 if __name__ == "__main__":
     replay_memory = ReplayMemory(100)
