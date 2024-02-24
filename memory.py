@@ -2,11 +2,11 @@ import torch
 
 class ReplayMemory:
     def __init__(self, N = 1000):
-        self.memory = torch.empty(size = (0, 4), dtype = torch.int)
+        self.memory = torch.empty(size = (0, 5), dtype = torch.int)
         self.N = N
 
-    def add_experience(self, state, action, reward, next_state):
-        new_exp = torch.tensor([state, action, reward, next_state]).view((1, 4))
+    def add_experience(self, state, action, reward, next_state, terminated):
+        new_exp = torch.tensor([state, action, reward, next_state, terminated]).view((1, 5))
         self.memory = torch.cat([self.memory, new_exp], dim = 0)
 
     def sample_batch(self, batch_size = 8):
