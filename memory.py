@@ -9,6 +9,9 @@ class ReplayMemory:
         new_exp = torch.tensor([state, action, reward, next_state, terminated]).view((1, 5))
         self.memory = torch.cat([self.memory, new_exp], dim = 0)
 
+        if self.memory.size()[0] > self.N:   # If memory exceeds the limit
+            self.memory = self.memory[1:, :] # Remove the oldest experience from memory
+
     def sample_batch(self, batch_size = 8):
         if not self.memory.numel():
             raise Exception("Replay memory is empty!")
